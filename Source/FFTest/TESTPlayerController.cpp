@@ -30,29 +30,31 @@ void ATESTPlayerController::OnInputClick()
 	FVector LastClickLocation;
 	if (GetHitResultUnderCursor(ECC_Visibility, false, HitResult))
 	{
-		FVector NavLocation = FVector::ZeroVector;
-		UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld());
-    
-		FNavLocation ProjectedLocation;
-		if (NavSys && NavSys->ProjectPointToNavigation(HitResult.Location, ProjectedLocation, FVector(500.f, 500.f, 500.f)))
-		{
-			LastClickLocation = ProjectedLocation.Location;
-		}
-		else
-		{
-			return;
-		}
+		LastClickLocation = HitResult.Location;
+		ServerMoveCommand(LastClickLocation);
 	}
-	MulticastMoveCommand(LastClickLocation);
-
-
 }
 
-void ATESTPlayerController::MulticastMoveCommand_Implementation(FVector LastClickLocation)
+void ATESTPlayerController::ServerMoveCommand_Implementation(FVector LastClickLocation)
 {
 		UMassEntitySubsystem* EntitySubsystem = GetWorld()->GetSubsystem<UMassEntitySubsystem>();
 	if (!EntitySubsystem) return;
-
+	UE_LOG(LogMass, Warning, TEXT("MulticastMoveCommand_Implementation"));
+	FVector NavLocation = FVector::ZeroVector;
+	UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld());
+    
+	FNavLocation ProjectedLocation;
+	if (NavSys && NavSys->ProjectPointToNavigation(LastClickLocation, ProjectedLocation, FVector(500.f, 500.f, 500.f)))
+	{
+		LastClickLocation = ProjectedLocation.Location;
+	}
+	else
+	{
+		return;
+	}
+	
+	
+	
 	FMassEntityManager& EntityManager = EntitySubsystem->GetMutableEntityManager();
 
 	FMassCommandBuffer CommandBuffer;

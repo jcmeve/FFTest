@@ -21,5 +21,5 @@ public:
 	void OnInputClick();
 	
 	UFUNCTION(Server, BlueprintCallable, Reliable)
-	void MulticastMoveCommand(FVector Location);
+	void ServerMoveCommand(FVector Location);
 };
