@@ -23,6 +23,10 @@ EStateTreeRunStatus FTESTStateTreeTask::EnterState(FStateTreeExecutionContext& C
 	FInstanceDataType& InstanceData = Context.GetInstanceData(*this);
 	const FCommandDataFragment& CommandData = Context.GetExternalData(EntityCommandDataHandle);
 	InstanceData.TargetLocation.EndOfPathPosition = CommandData.GetLocation();
+	
+	FCommandTypeFragment& CommandType = Context.GetExternalData(EntityCommandTypeHandle);
+	CommandType.SetType(ECommandType::None);
+	
 	UE_LOG(LogMass, Warning, TEXT("%lf, %lf, %lf"), CommandData.GetLocation().X,CommandData.GetLocation().Y,CommandData.GetLocation().Z)
 	return EStateTreeRunStatus::Running;
 	
@@ -36,8 +40,7 @@ EStateTreeRunStatus FTESTStateTreeTask::Tick(FStateTreeExecutionContext& Context
 void FTESTStateTreeTask::ExitState(FStateTreeExecutionContext& Context,
 	const FStateTreeTransitionResult& Transition) const
 {
-	FCommandTypeFragment& CommandType = Context.GetExternalData(EntityCommandTypeHandle);
-	CommandType.SetType(ECommandType::None);
+
 	Context.GetMutableEventQueue().Reset();
 	FMassStateTreeTaskBase::ExitState(Context, Transition);
 }

@@ -18,7 +18,7 @@ public:
 	virtual void BeginPlay() override;
 	
 	UFUNCTION(BlueprintCallable)
-	void OnInputClick();
+	void OnInputClick(); 
 	
 	UFUNCTION(Server, BlueprintCallable, Reliable)
 	void ServerMoveCommand(FVector Location);

@@ -31,7 +31,8 @@ public class FFTest : ModuleRules
 			"MassSignals",
 			"GameplayTags",
 			"MassReplication",
-			"MassEQS"
+			"MassEQS",
+			"NetCore",
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
