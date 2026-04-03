@@ -4,12 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "MassClientBubbleHandler.h"
+#include "MassCommonFragments.h"
 #include "TESTMassFastArrayItem.h"
 
 /**
  * 
  */
-class FFTEST_API FTESTClientBubbleHandler : public TClientBubbleHandlerBase<FTESTMassFastArrayItem>
+class FFTEST_API FTESTMassClientBubbleHandler : public TClientBubbleHandlerBase<FTESTMassFastArrayItem>
 {
 public:  
 #if UE_REPLICATION_COMPILE_SERVER_CODE  
@@ -35,6 +36,6 @@ public:
 #if UE_REPLICATION_COMPILE_CLIENT_CODE	
 	virtual void PostReplicatedAdd(const TArrayView<int32> AddedIndices, int32 FinalSize) override;
 	virtual void PostReplicatedChange(const TArrayView<int32> ChangedIndices, int32 FinalSize) override;
-	void PostReplicatedChangeEntity(const FMassEntityView& EntityView, const FTESTReplicatedAgent& Item);  
+	virtual void PostReplicatedChangeEntity(const FMassEntityView& EntityView, const FTESTReplicatedAgent& Item);  
 #endif // UE_REPLICATION_COMPILE_CLIENT_CODE
 };

@@ -32,7 +32,7 @@ AFFTestPlayerController::AFFTestPlayerController()
 void AFFTestPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-	GetWorld()->GetSubsystem<UUnitSubsystem>()->Init(CharacterClass ,100);
+	GetWorld()->GetSubsystem<UUnitSubsystem>()->Init(CharacterClass ,20);
 }
 
 void AFFTestPlayerController::SetupInputComponent()

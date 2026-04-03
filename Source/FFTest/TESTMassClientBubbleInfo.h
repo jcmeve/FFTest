@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "TESTClientBubbleHandler.h"
+#include "TESTMassClientBubbleHandler.h"
 #include "TESTClientBubbleSerializer.h"
 #include "MassClientBubbleInfoBase.h"
 #include "GameFramework/Actor.h"

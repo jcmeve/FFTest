@@ -36,7 +36,7 @@ void UTESTMassReplicator::ProcessClientReplication(FMassExecutionContext& Contex
 	{  
 		// Grabs the client bubble
 		ATESTMassClientBubbleInfo& BubbleInfo = RepSharedFrag->GetTypedClientBubbleInfoChecked<ATESTMassClientBubbleInfo>(ClientHandle);  
-		FTESTClientBubbleHandler& Bubble = BubbleInfo.GetBubbleSerializer().Bubble;  
+		FTESTMassClientBubbleHandler& Bubble = BubbleInfo.GetBubbleSerializer().Bubble;  
  
 		// Retrieves the entity agent
 		FTESTMassFastArrayItem* Item = Bubble.GetMutableItem(Handle);  

@@ -4,19 +4,20 @@
 
 #include "CoreMinimal.h"
 #include "MassClientBubbleSerializerBase.h"
+#include "TESTClientBubbleSerializer.h"
 #include "TESTMassClientBubbleHandler.h"
-#include "TESTMassFastArrayItem.h"
-#include "TESTClientBubbleSerializer.generated.h"
+#include "UObject/Object.h"
+#include "TESTMassSmoothClientBubbleSerializer.generated.h"
 
 /**
  * 
  */
 USTRUCT()
-struct FFTEST_API FTESTClientBubbleSerializer : public FMassClientBubbleSerializerBase
+struct  FFTEST_API FTESTMassSmoothClientBubbleSerializer : public FMassClientBubbleSerializerBase
 {
 	GENERATED_BODY()
 public:
-	FTESTClientBubbleSerializer()
+	FTESTMassSmoothClientBubbleSerializer()
 	{
 		Bubble.Initialize(Entities, *this);
 	}
@@ -24,7 +25,7 @@ public:
 	/** Define a custom replication for this struct */
 	bool NetDeltaSerialize(FNetDeltaSerializeInfo& DeltaParams)
 	{
-		return FFastArraySerializer::FastArrayDeltaSerialize<FTESTMassFastArrayItem, FTESTClientBubbleSerializer>(Entities, DeltaParams, *this);
+		return FFastArraySerializer::FastArrayDeltaSerialize<FTESTMassFastArrayItem, FTESTMassSmoothClientBubbleSerializer>(Entities, DeltaParams, *this);
 	}
  
 	/** The one responsible for storing the server data in the client fragments */
@@ -32,15 +33,14 @@ public:
  
 protected:
 	/** Fast Array of Agents for efficient replication. Maintained as a freelist on the server, to keep index consistency as indexes are used as Handles into the Array 
-	 *  Note array order is not guaranteed between server and client so handles will not be consistent between them, FMassNetworkID will be.
-	 */
+	 *  Note array order is not guaranteed between server and client so handles will not be consistent between them, FMassNetworkID will be.*/
 	UPROPERTY(Transient)
 	TArray<FTESTMassFastArrayItem> Entities;
 	
 };
 
 template<>
-struct TStructOpsTypeTraits<FTESTClientBubbleSerializer> : public TStructOpsTypeTraitsBase2<FTESTClientBubbleSerializer>
+struct TStructOpsTypeTraits<FTESTMassSmoothClientBubbleSerializer> : public TStructOpsTypeTraitsBase2<FTESTClientBubbleSerializer>
 {
 	enum
 	{

@@ -1,11 +1,11 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TESTClientBubbleHandler.h"
+#include "TESTMassClientBubbleHandler.h"
 
 #include "MassCommonFragments.h"
 #if UE_REPLICATION_COMPILE_CLIENT_CODE
-void FTESTClientBubbleHandler::PostReplicatedAdd(const TArrayView<int32> AddedIndices, int32 FinalSize)
+void FTESTMassClientBubbleHandler::PostReplicatedAdd(const TArrayView<int32> AddedIndices, int32 FinalSize)
 {
 	TArrayView<FTransformFragment> TransformFragments;
 
@@ -38,7 +38,7 @@ void FTESTClientBubbleHandler::PostReplicatedAdd(const TArrayView<int32> AddedIn
 
 }
 
-void FTESTClientBubbleHandler::PostReplicatedChange(const TArrayView<int32> ChangedIndices, int32 FinalSize)
+void FTESTMassClientBubbleHandler::PostReplicatedChange(const TArrayView<int32> ChangedIndices, int32 FinalSize)
 {
 	PostReplicatedChangeHelper(
 		ChangedIndices,
@@ -48,7 +48,7 @@ void FTESTClientBubbleHandler::PostReplicatedChange(const TArrayView<int32> Chan
 		});
 }
 
-void FTESTClientBubbleHandler::PostReplicatedChangeEntity(const FMassEntityView& EntityView,
+void FTESTMassClientBubbleHandler::PostReplicatedChangeEntity(const FMassEntityView& EntityView,
                                                           const FTESTReplicatedAgent& Item)
 {
 	// Grabs the transform fragment from the entity  

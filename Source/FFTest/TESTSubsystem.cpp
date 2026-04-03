@@ -5,6 +5,7 @@
 
 #include "MassReplicationSubsystem.h"
 #include "TESTMassClientBubbleInfo.h"
+#include "TESTMassSmoothClientBubbleSmoothInfo.h"
 
 void UTESTSubsystem::PostInitialize()
 {
@@ -12,4 +13,5 @@ void UTESTSubsystem::PostInitialize()
 	const UWorld* World = GetWorld();  
 	UMassReplicationSubsystem* ReplicationSubsystem = UWorld::GetSubsystem<UMassReplicationSubsystem>(World);
 	ReplicationSubsystem->RegisterBubbleInfoClass(ATESTMassClientBubbleInfo::StaticClass());
+	ReplicationSubsystem->RegisterBubbleInfoClass(ATESTMassSmoothClientBubbleSmoothInfo::StaticClass());
 }
