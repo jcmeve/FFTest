@@ -24,8 +24,11 @@ void UTESTMassReplicator::ProcessClientReplication(FMassExecutionContext& Contex
 		// Retrieves the bubble of the relevant client
 		ATESTMassClientBubbleInfo& BubbleInfo = RepSharedFrag->GetTypedClientBubbleInfoChecked<ATESTMassClientBubbleInfo>(ClientHandle);  
  
-		// Sets the location in the entity agent
-		InReplicatedAgent.SetEntityLocation(TransformFragments[EntityIdx].GetTransform().GetLocation());  
+		
+		FReplicatedAgentPositionYawData PositionYawData;
+		PositionYawData.SetPosition(TransformFragments[EntityIdx].GetTransform().GetLocation());
+		PositionYawData.SetYaw(FRotator::NormalizeAxis( TransformFragments[EntityIdx].GetTransform().Rotator().Yaw));
+		InReplicatedAgent.SetPositionYawData(PositionYawData);
  
 		// Adds the new agent in the client bubble
 		return BubbleInfo.GetBubbleSerializer().Bubble.AddAgent(InContext.GetEntity(EntityIdx), InReplicatedAgent);  
@@ -45,10 +48,13 @@ void UTESTMassReplicator::ProcessClientReplication(FMassExecutionContext& Contex
     
 		const FVector& EntityLocation = TransformFragments[EntityIdx].GetTransform().GetLocation();  
 		constexpr float LocationTolerance = 10.0f;  
-		if (!FVector::PointsAreNear(EntityLocation, Item->Agent.GetEntityLocation(), LocationTolerance))  
+		if (!FVector::PointsAreNear(EntityLocation, Item->Agent.GetPositionYawData().GetPosition(), LocationTolerance))  
 		{  
-			// Only updates the agent position if the transform fragment location has changed
-			Item->Agent.SetEntityLocation(EntityLocation);  
+			FReplicatedAgentPositionYawData PositionYawData;
+			PositionYawData.SetPosition(EntityLocation);
+			PositionYawData.SetYaw(FRotator::NormalizeAxis( TransformFragments[EntityIdx].GetTransform().Rotator().Yaw));
+			
+			Item->Agent.SetPositionYawData(PositionYawData);
 			bMarkItemDirty = true;  
 		}  
     

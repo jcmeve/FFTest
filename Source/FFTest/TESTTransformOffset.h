@@ -4,18 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "MassEntityElementTypes.h"
-#include "TESTTranslationOffset.generated.h"
+#include "TESTReplicatedAgent.h"
+#include "TESTTransformOffset.generated.h"
 
 /**
  * 
  */
 USTRUCT()
-struct FFTEST_API FTESTTranslationOffset : public FMassFragment
+struct FFTEST_API FTESTTransformOffset : public FMassFragment
 {
 	GENERATED_BODY()
 	
 	UPROPERTY(Transient)  
-	FVector TranslationOffset = FVector::ZeroVector;  
+	FReplicatedAgentPositionYawData TransformOffset;  
 };
 
 

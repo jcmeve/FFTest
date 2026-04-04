@@ -4,6 +4,7 @@
 #include "TESTCommandTrait.h"
 
 #include "MassEntityTemplateRegistry.h"
+#include "TESTOffsetParams.h"
 
 
 void UTESTCommandTrait::BuildTemplate(FMassEntityTemplateBuildContext& BuildContext,
@@ -18,7 +19,9 @@ void UTESTCommandTrait::BuildTemplate(FMassEntityTemplateBuildContext& BuildCont
 	FCommandDataFragment CommandDataFragment;
 	FSharedStruct SharadFragment = EntityManager.GetOrCreateSharedFragment(CommandDataFragment);
 	BuildContext.AddSharedFragment(SharadFragment);
-	
-	
+	//TODO MOVE 
+	FTESTOffsetParams OffsetParamsFragment; 
+	const FConstSharedStruct OffsetConstSharedStruct = EntityManager.GetOrCreateConstSharedFragment(OffsetParamsFragment);
+	BuildContext.AddConstSharedFragment(OffsetConstSharedStruct);
 }
 

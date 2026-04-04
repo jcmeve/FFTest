@@ -8,12 +8,12 @@
 #include "MassEntityManager.h"
 #include "GameFramework/Actor.h"
 #include "MassActorSubsystem.h"
-#include "TESTTranslationOffset.h"
+#include "TESTTransformOffset.h"
 
 UTESTSimepleMovementSync::UTESTSimepleMovementSync()
 	: EntityQuery(*this)
 {
-	ExecutionFlags = (int32)EProcessorExecutionFlags::AllNetModes;
+	ExecutionFlags = (int32)EProcessorExecutionFlags::Client;
 	ExecutionOrder.ExecuteInGroup = UE::Mass::ProcessorGroupNames::UpdateWorldFromMass;
 	ExecutionOrder.ExecuteAfter.Add(UE::Mass::ProcessorGroupNames::Movement);
 	RequiredTags.Add<FTESTSimpleMovementSync>();
@@ -25,7 +25,7 @@ void UTESTSimepleMovementSync::ConfigureQueries(const TSharedRef<FMassEntityMana
 	AddRequiredTagsToQuery(EntityQuery);
 	EntityQuery.AddRequirement<FTransformFragment>(EMassFragmentAccess::ReadOnly);
 	EntityQuery.AddRequirement<FMassActorFragment>(EMassFragmentAccess::ReadWrite);
-	EntityQuery.AddRequirement<FTESTTranslationOffset>(EMassFragmentAccess::ReadWrite);
+	EntityQuery.AddRequirement<FTESTTransformOffset>(EMassFragmentAccess::ReadWrite);
 }
 
 void UTESTSimepleMovementSync::Execute(FMassEntityManager& EntityManager, FMassExecutionContext& Context)
@@ -43,34 +43,43 @@ void UTESTSimepleMovementSync::Execute(FMassEntityManager& EntityManager, FMassE
 	// 		}
 	// 	}
 	// });
-	
+
 	EntityQuery.ForEachEntityChunk(Context, [](FMassExecutionContext& Context)
-  	{
-  		const TConstArrayView<FTransformFragment> TransformList = Context.GetFragmentView<FTransformFragment>();
-  		const TConstArrayView<FTESTTranslationOffset> MeshOffsetList = Context.GetFragmentView<FTESTTranslationOffset>();
+	{
+		const TConstArrayView<FTransformFragment> TransformList = Context.GetFragmentView<FTransformFragment>();
+		const TConstArrayView<FTESTTransformOffset> MeshOffsetList = Context.GetFragmentView<FTESTTransformOffset>();
 		const TArrayView<FMassActorFragment> ActorList = Context.GetMutableFragmentView<FMassActorFragment>();
-  
-  		for (int32 EntityIdx = 0; EntityIdx < Context.GetNumEntities(); EntityIdx++)
-  		{
-  			const FTransformFragment& TransformFragment = TransformList[EntityIdx];
-  
-  			FVector MeshTranslationOffset = FVector::ZeroVector;
-  			if (MeshOffsetList.Num() > 0)
-  			{
-  				MeshTranslationOffset = MeshOffsetList[EntityIdx].TranslationOffset;
-  			}
-  
-  			FTransform Transform = TransformFragment.GetTransform();
-  			Transform.SetLocation(Transform.GetLocation() + MeshTranslationOffset);
-		    if (AActor* Actor = ActorList[EntityIdx].GetMutable())
-		    {
-			    Actor->SetActorTransform(Transform, false, nullptr,
-			                             ETeleportType::TeleportPhysics);
-		    }
-  		}
-  	});
 	
+		for (int32 EntityIdx = 0; EntityIdx < Context.GetNumEntities(); EntityIdx++)
+		{
+			const FTransformFragment& TransformFragment = TransformList[EntityIdx];
 	
+			FVector TranslationOffset = FVector::ZeroVector;
+			float YawOffset = 0.0f;
+			if (MeshOffsetList.Num() > 0)
+			{
+				TranslationOffset = MeshOffsetList[EntityIdx].TransformOffset.GetPosition();
+				YawOffset = MeshOffsetList[EntityIdx].TransformOffset.GetYaw();
+			}
 	
+			FTransform Transform = TransformFragment.GetTransform();
+			Transform.SetLocation(Transform.GetLocation() + TranslationOffset);
 	
+			float ServerYawRadian =  FMath::DegreesToRadians(Transform.Rotator().Yaw);
+			FQuat ServerQuat = FQuat(FVector::UpVector, ServerYawRadian);
+	
+			float VisualYawOffsetDeg = YawOffset;
+			FQuat OffsetQuat = FQuat(FVector::UpVector, FMath::DegreesToRadians(VisualYawOffsetDeg));
+	
+			FQuat FinalVisualQuat = OffsetQuat * ServerQuat;
+	
+			Transform.SetRotation(FinalVisualQuat);
+	
+			if (AActor* Actor = ActorList[EntityIdx].GetMutable())
+			{
+				Actor->SetActorTransform(Transform, false, nullptr,
+				                         ETeleportType::TeleportPhysics);
+			}
+		}
+	});
 }

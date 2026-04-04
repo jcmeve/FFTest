@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "MassClientBubbleSerializerBase.h"
 #include "TESTClientBubbleSerializer.h"
-#include "TESTMassClientBubbleHandler.h"
+#include "TESTMassSmoothClientBubbleHandler.h"
 #include "UObject/Object.h"
 #include "TESTMassSmoothClientBubbleSerializer.generated.h"
 
@@ -29,8 +29,7 @@ public:
 	}
  
 	/** The one responsible for storing the server data in the client fragments */
-	FTESTMassClientBubbleHandler Bubble;
- 
+	UTESTMassSmoothClientBubbleHandler Bubble;
 protected:
 	/** Fast Array of Agents for efficient replication. Maintained as a freelist on the server, to keep index consistency as indexes are used as Handles into the Array 
 	 *  Note array order is not guaranteed between server and client so handles will not be consistent between them, FMassNetworkID will be.*/

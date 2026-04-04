@@ -18,7 +18,7 @@ public:
 		: AMassClientBubbleInfoBase(ObjectInitializer)
 	{
 		Serializers.Add(&BubbleSerializer);
-		SetNetUpdateFrequency(100);
+		SetNetUpdateFrequency(300);
 	}
  
 	FTESTMassSmoothClientBubbleSerializer& GetBubbleSerializer() { return BubbleSerializer; }

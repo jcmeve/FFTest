@@ -26,7 +26,10 @@ void FTESTMassClientBubbleHandler::PostReplicatedAdd(const TArrayView<int32> Add
 	auto SetSpawnedEntityData = [&]
 	(const FMassEntityView& EntityView, const FTESTReplicatedAgent& ReplicatedEntity, const int32 EntityIdx)
 	{
-		TransformFragments[EntityIdx].GetMutableTransform().SetLocation(ReplicatedEntity.GetEntityLocation());
+		const FReplicatedAgentPositionYawData& PositionYawData = ReplicatedEntity.GetPositionYawData();
+		TransformFragments[EntityIdx].GetMutableTransform().SetLocation(PositionYawData.GetPosition());
+		TransformFragments[EntityIdx].GetMutableTransform().SetRotation(FQuat(FVector::UpVector, FMath::DegreesToRadians(PositionYawData.GetYaw())));
+		
 	};
 
 	auto SetModifiedEntityData = [this](const FMassEntityView& EntityView, const FTESTReplicatedAgent& Item)
@@ -55,7 +58,10 @@ void FTESTMassClientBubbleHandler::PostReplicatedChangeEntity(const FMassEntityV
 	FTransformFragment& TransformFragment = EntityView.GetFragmentData<FTransformFragment>();
 
 	// Sets the transform location with the agent location  
-	TransformFragment.GetMutableTransform().SetLocation(Item.GetEntityLocation());
+	const FReplicatedAgentPositionYawData& PositionYawData = Item.GetPositionYawData();
+	TransformFragment.GetMutableTransform().SetLocation(PositionYawData.GetPosition());
+	TransformFragment.GetMutableTransform().SetRotation(FQuat(FVector::UpVector, FMath::DegreesToRadians(PositionYawData.GetYaw())));
+	
 }
 
 #endif //UE_REPLICATION_COMPILE_CLIENT_CODE

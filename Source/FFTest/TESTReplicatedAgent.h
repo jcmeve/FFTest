@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MassReplicationTypes.h"
+#include "MassReplicationTransformHandlers.h"
 #include "TESTReplicatedAgent.generated.h"
 
 /**
@@ -14,12 +15,12 @@ struct FFTEST_API FTESTReplicatedAgent : public FReplicatedAgentBase
 {
 	GENERATED_BODY()
 	
-	const FVector& GetEntityLocation() const { return EntityLocation; }  
+	const FReplicatedAgentPositionYawData& GetPositionYawData() const { return PositionYawData; }  
  
-	void SetEntityLocation(const FVector& InEntityLocation) { EntityLocation = InEntityLocation; }  
+	void SetPositionYawData(const FReplicatedAgentPositionYawData& InPositionYawData) { PositionYawData = InPositionYawData; }  
   
 private:  
 	UPROPERTY(Transient)  
-	FVector_NetQuantize EntityLocation;  
+	FReplicatedAgentPositionYawData PositionYawData;
 };
 

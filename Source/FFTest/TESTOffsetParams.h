@@ -20,13 +20,18 @@ struct FFTEST_API FTESTOffsetParams : public FMassConstSharedFragment
  
 	/** How much time the smooth can take */  
 	UPROPERTY(EditAnywhere, meta = (UIMin = 0.0f, ClampMin = 0.0f))  
-	float SmoothTime = 0.2f;  
+	float SmoothTime = 0.05f;  
+//	float SmoothTime = 0.2f;  
  
 	/** The tolerated distance to smooth. If the distance is higher the mesh will snap to the actual position. */  
 	UPROPERTY(EditAnywhere, meta = (UIMin = 0.0f, ClampMin = 0.0f))  
 	float MaxSmoothNetUpdateDistance = 50.0f;  
  
-	float MaxSmoothNetUpdateDistanceSqr = 0.0f;  
+	float MaxSmoothNetUpdateDistanceSqr = 2500.0f;  
+	
+	UPROPERTY(EditAnywhere, meta = (UIMin = 0.0f, ClampMin = 0.0f))  
+	float MaxSmoothNetUpdateYaw = 180.0f;  
+ 
  
 public:  
 	/** Returns a copy of this instance with the parameters validated */
