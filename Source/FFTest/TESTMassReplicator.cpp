@@ -48,7 +48,11 @@ void UTESTMassReplicator::ProcessClientReplication(FMassExecutionContext& Contex
     
 		const FVector& EntityLocation = TransformFragments[EntityIdx].GetTransform().GetLocation();  
 		constexpr float LocationTolerance = 10.0f;  
-		if (!FVector::PointsAreNear(EntityLocation, Item->Agent.GetPositionYawData().GetPosition(), LocationTolerance))  
+		const float EntityYaw = TransformFragments[EntityIdx].GetTransform().Rotator().Yaw;
+		constexpr float YawTolerance = 10.0f;
+		if (!FVector::PointsAreNear(EntityLocation, Item->Agent.GetPositionYawData().GetPosition(), LocationTolerance)||
+		!FMath::IsNearlyEqual(EntityYaw,Item->Agent.GetPositionYawData().GetYaw(),YawTolerance)
+		)  
 		{  
 			FReplicatedAgentPositionYawData PositionYawData;
 			PositionYawData.SetPosition(EntityLocation);
@@ -56,8 +60,8 @@ void UTESTMassReplicator::ProcessClientReplication(FMassExecutionContext& Contex
 			
 			Item->Agent.SetPositionYawData(PositionYawData);
 			bMarkItemDirty = true;  
-		}  
-    
+		}
+
 		if (bMarkItemDirty)  
 		{  
 			// Marks the agent as dirty so it replicated to the client
